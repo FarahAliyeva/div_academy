@@ -1,0 +1,74 @@
+-- Task 1
+SELECT FIRST_NAME,
+       LAST_NAME,
+       SALARY,
+    CASE 
+        WHEN SALARY < 6000 THEN 'Asagi'
+        WHEN SALARY BETWEEN 6000 AND 12000 THEN 'Orta'
+        WHEN SALARY > 12000 THEN 'Yuksek'
+    END AS MAAS_SEVIYYESI
+FROM HR.EMPLOYEES;
+
+
+
+
+
+
+-- Task 2
+SELECT FIRST_NAME,
+       JOB_ID,
+    CASE JOB_ID
+        WHEN 'IT_PROG' THEN 'Proqramci'
+        WHEN 'SA_REP' THEN 'Satis numayendesi'
+        WHEN 'ST_CLERK' THEN 'Anbar iscisi'
+        ELSE 'Diger'
+    END AS VEZIFE
+FROM HR.EMPLOYEES;
+
+
+
+
+
+
+-- Task 3 (CASE ilə)
+SELECT 
+    FIRST_NAME,
+    COMMISSION_PCT,
+    CASE 
+        WHEN COMMISSION_PCT IS NULL THEN 'Komissiya yoxdur'
+        ELSE 'Komissiya var'
+    END AS KOMISSIYA_STATUSU
+FROM HR.EMPLOYEES;
+
+-- Task 3 (NVL2 ilə)
+SELECT 
+    FIRST_NAME,
+    COMMISSION_PCT,
+    NVL2(COMMISSION_PCT, 'Komissiya var', 'Komissiya yoxdur') AS KOMISSIYA_STATUSU
+FROM HR.EMPLOYEES;
+
+
+
+
+
+
+-- Task 4
+SELECT CITY,
+       COUNTRY_ID,
+    CASE COUNTRY_ID
+        WHEN 'US' THEN 'Amerika'
+        WHEN 'CA' THEN 'Amerika'
+        WHEN 'MX' THEN 'Amerika'
+        WHEN 'BR' THEN 'Amerika'
+        WHEN 'UK' THEN 'Avropa'
+        WHEN 'DE' THEN 'Avropa'
+        WHEN 'IT' THEN 'Avropa'
+        WHEN 'NL' THEN 'Avropa'
+        WHEN 'CH' THEN 'Avropa'
+        WHEN 'JP' THEN 'Asiya'
+        WHEN 'CN' THEN 'Asiya'
+        WHEN 'IN' THEN 'Asiya'
+        WHEN 'SG' THEN 'Asiya'
+        ELSE 'Diger'
+    END AS QITE
+FROM HR.LOCATIONS;
