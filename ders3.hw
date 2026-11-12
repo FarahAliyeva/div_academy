@@ -72,3 +72,112 @@ SELECT CITY,
         ELSE 'Diger'
     END AS QITE
 FROM HR.LOCATIONS;
+
+
+
+
+
+
+-- Task 5
+SELECT FIRST_NAME, 
+       DEPARTMENT_ID, 
+       SALARY,
+       CASE DEPARTMENT_ID
+            WHEN 80 THEN SALARY * 0.10
+            WHEN 60 THEN SALARY * 0.15
+            ELSE SALARY * 0.05
+       END AS BONUS
+FROM HR.EMPLOYEES
+ORDER BY BONUS DESC;
+
+
+
+
+
+
+-- Task 6
+SELECT FIRST_NAME, 
+       SALARY,
+       CASE
+            WHEN SALARY > 15000 THEN 'Yuksek'
+            WHEN SALARY > 5000  THEN 'Orta'
+            ELSE 'Asagi'
+       END AS Seviyye
+FROM HR.EMPLOYEES;
+-- Şərtlərin sırası səhvdir
+-- Şərt verərək yaratdığımız Seviyye sütununda əyə uyğunsuzluğu var
+-- Seviyy sütün adı olaraq ya qoşa dırnaq işarəsi ilə ya da heç bir ayırıcı işarə olmadan yazılmalıdır 
+
+
+
+
+
+
+-- Task 7 
+SELECT FIRST_NAME, 
+       JOB_ID, 
+       MANAGER_ID,
+       CASE
+            WHEN MANAGER_ID IS NULL THEN 'Direktor'
+            WHEN MANAGER_ID = 100 THEN 'Direktorun komandasi'
+            WHEN JOB_ID LIKE '%MAN' OR JOB_ID LIKE '%MGR' THEN 'Menecer'
+            ELSE 'Isci'
+       END AS ROL
+FROM HR.EMPLOYEES;
+
+
+
+
+
+
+-- Task 8
+SELECT FIRST_NAME, 
+       SALARY, 
+       COMMISSION_PCT,
+       NVL(SALARY * COMMISSION_PCT * 12, 0) AS ILLIK_KOMISSIYA,
+       (SALARY * 12) + NVL(SALARY * COMMISSION_PCT * 12, 0) AS ILLIK_GELIR
+FROM HR.EMPLOYEES
+ORDER BY ILLIK_GELIR DESC; 
+
+
+
+
+
+
+-- Task 9 
+SELECT e.FIRST_NAME, 
+       j.JOB_TITLE, 
+       e.SALARY, 
+       j.MIN_SALARY, 
+       j.MAX_SALARY,
+       CASE
+            WHEN e.SALARY = j.MIN_SALARY THEN 'Minimumda'
+            WHEN e.SALARY = j.MAX_SALARY THEN 'Maksimumda'
+            WHEN e.SALARY < (j.MIN_SALARY + j.MAX_SALARY) / 2 THEN 'Asagi yarida'
+            ELSE 'Yuxari yarida'
+       END AS MOVQE
+FROM HR.EMPLOYEES e
+JOIN HR.JOBS j 
+ON e.JOB_ID = j.JOB_ID;
+
+
+
+
+
+
+-- Task 10 
+SELECT e.FIRST_NAME, 
+       e.LAST_NAME,
+       NVL(d.DEPARTMENT_NAME, 'Sobesiz') AS SOBE,
+       CASE
+            WHEN e.DEPARTMENT_ID IS NULL THEN 'Melum deyil'
+            WHEN l.CITY = 'Seattle' THEN 'Bas ofis'
+            ELSE 'Filial'
+       END AS OFIS
+FROM HR.EMPLOYEES e
+LEFT JOIN HR.DEPARTMENTS d 
+ON e.DEPARTMENT_ID = d.DEPARTMENT_ID
+LEFT JOIN HR.LOCATIONS l 
+ON d.LOCATION_ID = l.LOCATION_ID;
+
+
