@@ -1,0 +1,159 @@
+-- Task 1 
+SELECT e.FIRST_NAME, 
+       e.LAST_NAME, 
+       m.FIRST_NAME AS MENECER_ADI, 
+       m.LAST_NAME AS MENECER_SOYADI
+FROM HR.EMPLOYEES e
+JOIN HR.EMPLOYEES m 
+ON e.MANAGER_ID = m.EMPLOYEE_ID;
+
+
+
+
+
+
+-- Task 2
+SELECT e.FIRST_NAME, 
+       e.LAST_NAME, 
+       m.FIRST_NAME AS MENECER_ADI, 
+       m.LAST_NAME AS MENECER_SOYADI
+FROM HR.EMPLOYEES e
+LEFT JOIN HR.EMPLOYEES m 
+ON e.MANAGER_ID = m.EMPLOYEE_ID;
+-- Task 1-də 106 sətir çıxdı, çünki INNER JOIN meneceri olmayan işçiləri  xaric edir.
+-- Task 2-də isə 107 sətir çıxdı. LEFT JOIN istifadə olunduğu üçün bütün işçilər nəticəyə daxil edilir.
+
+
+
+
+
+
+
+-- Task 3 
+SELECT FIRST_NAME, 
+       LAST_NAME, 
+       DEPARTMENT_ID
+FROM HR.EMPLOYEES
+WHERE DEPARTMENT_ID IN ( SELECT DEPARTMENT_ID 
+                         FROM HR.DEPARTMENTS 
+                         WHERE LOCATION_ID = 1700);
+
+
+
+
+
+
+-- Task 4 
+SELECT FIRST_NAME, 
+       LAST_NAME, 
+       DEPARTMENT_ID
+FROM HR.EMPLOYEES
+WHERE DEPARTMENT_ID IN (SELECT DEPARTMENT_ID 
+                        FROM HR.DEPARTMENTS 
+                        WHERE LOCATION_ID = 1700);
+
+
+
+
+
+
+-- Task 5 
+SELECT e.FIRST_NAME, 
+       e.LAST_NAME, 
+       e.SALARY, 
+       m.FIRST_NAME AS MENECER_ADI, 
+       m.SALARY AS MENECER_MAASI
+FROM HR.EMPLOYEES e
+JOIN HR.EMPLOYEES m 
+ON e.MANAGER_ID = m.EMPLOYEE_ID
+WHERE e.SALARY > m.SALARY;
+
+
+
+
+
+
+-- Task 6
+SELECT e.FIRST_NAME, 
+       e.LAST_NAME, 
+       e.DEPARTMENT_ID, 
+       m.FIRST_NAME AS MENECER_ADI, 
+       m.DEPARTMENT_ID AS MENECER_SOBESI
+FROM HR.EMPLOYEES e
+JOIN HR.EMPLOYEES m 
+ON e.MANAGER_ID = m.EMPLOYEE_ID
+WHERE e.DEPARTMENT_ID <> m.DEPARTMENT_ID;
+
+
+
+
+
+
+-- Task 7 
+SELECT FIRST_NAME, 
+       LAST_NAME, 
+       JOB_ID, 
+       SALARY
+FROM HR.EMPLOYEES
+WHERE JOB_ID IN (SELECT JOB_ID 
+                FROM HR.JOBS 
+                WHERE MIN_SALARY >= 10000);
+
+
+
+
+
+
+-- Task 8 
+SELECT FIRST_NAME, 
+       LAST_NAME
+FROM HR.EMPLOYEES
+WHERE DEPARTMENT_ID IN (SELECT DEPARTMENT_ID
+                        FROM HR.DEPARTMENTS
+                        WHERE DEPARTMENT_NAME IN ('Sales', 'IT'));
+-- `=` yox `IN` istifadə olunmalıdır.
+-- 2. Subquery-də iki sütun seçilib, lakin əsas sorğuda tək bir sütun  ilə müqayisə aparılır.
+-- 3. HR.DEPARTMENTS cədvəlində şöbə adları böyük hərflə yazılıb.Kodda kiçik hərflə yazıldığı üçün tapılmayacaq.
+
+
+
+
+
+
+-- Task 9 
+-- a 
+SELECT EMPLOYEE_ID, 
+       FIRST_NAME, 
+       LAST_NAME
+FROM HR.EMPLOYEES
+WHERE EMPLOYEE_ID IN (SELECT MANAGER_ID 
+                      FROM HR.EMPLOYEES 
+                      WHERE MANAGER_ID IS NOT NULL);
+
+-- b
+SELECT DISTINCT m.EMPLOYEE_ID, 
+                m.FIRST_NAME, 
+                m.LAST_NAME
+FROM HR.EMPLOYEES e
+JOIN HR.EMPLOYEES m 
+ON e.MANAGER_ID = m.EMPLOYEE_ID;
+-- SELF JOIN işlədəndə eyni menecerin bir neçə işçisi olduğu üçün nəticədə təkrar sətirlər yarandı.
+
+
+
+
+
+
+-- Task 10 
+SELECT m.FIRST_NAME AS MENECER_ADI, 
+       m.LAST_NAME AS MENECER_SOYADI, 
+       COUNT(e.EMPLOYEE_ID) AS TABE_SAYI, 
+       ROUND(AVG(e.SALARY)) AS TABELERIN_ORTA_MAASI
+FROM HR.EMPLOYEES e
+JOIN HR.EMPLOYEES m 
+ON e.MANAGER_ID = m.EMPLOYEE_ID
+GROUP BY m.EMPLOYEE_ID, 
+         m.FIRST_NAME, 
+         m.LAST_NAME
+HAVING COUNT(e.EMPLOYEE_ID) > 5
+ORDER BY TABE_SAYI DESC;
