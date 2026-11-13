@@ -150,6 +150,26 @@ ON e.JOB_ID = j.JOB_ID;
 
 
 
+-- TASK 10
+SELECT e.FIRST_NAME, 
+       e.LAST_NAME,
+       NVL2(d.MANAGER_ID, 'Rehberi var', 'Rehbersiz sobe') AS MENECER_STATUSU,
+    CASE 
+        WHEN e.DEPARTMENT_ID IS NULL THEN 'Teyin edilmeyib'
+        WHEN l.COUNTRY_ID = 'US' THEN 'ABS ofisi'
+        ELSE 'Beynelxalq ofis'
+    END AS REGION
+FROM HR.EMPLOYEES e
+LEFT JOIN HR.DEPARTMENTS 
+d ON e.DEPARTMENT_ID = d.DEPARTMENT_ID
+LEFT JOIN HR.LOCATIONS l 
+ON d.LOCATION_ID = l.LOCATION_ID;
+
+
+
+
+
+
 
 
 
