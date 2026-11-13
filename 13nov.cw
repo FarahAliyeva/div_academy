@@ -98,4 +98,61 @@ FROM HR.EMPLOYEES;
 
 
 
+-- TASK 7
+SELECT FIRST_NAME, 
+       PHONE_NUMBER, 
+       SALARY,
+    CASE 
+        WHEN PHONE_NUMBER LIKE '515%' THEN 'Daxili xett'
+        WHEN SALARY >= 10000 THEN 'Yuksek maasli'
+        WHEN COMMISSION_PCT IS NOT NULL THEN 'Satis komandasi'
+        ELSE 'Standart isci'
+    END AS KATEQORIYA
+FROM HR.EMPLOYEES;
+
+
+
+
+
+
+-- TASK 8
+SELECT FIRST_NAME, 
+       SALARY, 
+       COMMISSION_PCT,
+       NVL(SALARY * COMMISSION_PCT * 3, 0) AS RUBLUK_BONUS,
+       (SALARY * 3) + NVL(SALARY * COMMISSION_PCT * 3, 0) AS RUBLUK_UMUMI
+FROM HR.EMPLOYEES
+ORDER BY RUBLUK_UMUMI ASC;
+
+
+
+
+
+
+-- TASK 9
+SELECT e.FIRST_NAME, 
+       j.JOB_TITLE, 
+       e.SALARY, 
+       j.MIN_SALARY, 
+       j.MAX_SALARY,
+    CASE 
+        WHEN e.SALARY = j.MAX_SALARY THEN 'Limite catib'
+        WHEN (j.MAX_SALARY - e.SALARY) <= 2000 THEN 'Limite cox yaxin'
+        WHEN e.SALARY < (j.MIN_SALARY + 1000) THEN 'Baslangic seviyyede'
+        ELSE 'Orta araliqda'
+    END AS MAAS_VEZIYYETI
+FROM HR.EMPLOYEES e
+JOIN HR.JOBS j 
+ON e.JOB_ID = j.JOB_ID;
+
+
+
+
+
+
+
+
+
+
+
 
