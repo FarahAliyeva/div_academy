@@ -1,0 +1,123 @@
+-- Task 1
+SELECT 
+    e.FIRST_NAME AS ISCI_ADI, 
+    e.JOB_ID AS ISCI_VEZIFESI, 
+    m.FIRST_NAME AS MENECER_ADI, 
+    m.JOB_ID AS MENECER_VEZIFESI
+FROM HR.EMPLOYEES e
+JOIN HR.EMPLOYEES m 
+    ON e.MANAGER_ID = m.EMPLOYEE_ID;
+
+-- Task 2
+SELECT 
+    e.FIRST_NAME, 
+    e.LAST_NAME, 
+    NVL(m.FIRST_NAME, 'Yoxdur') AS MENECER_ADI, 
+    NVL(m.LAST_NAME, 'Yoxdur') AS MENECER_SOYADI
+FROM HR.EMPLOYEES e
+LEFT JOIN HR.EMPLOYEES m 
+    ON e.MANAGER_ID = m.EMPLOYEE_ID;
+
+-- Task 3
+SELECT 
+    DEPARTMENT_ID, 
+    DEPARTMENT_NAME, 
+    LOCATION_ID
+FROM HR.DEPARTMENTS
+WHERE LOCATION_ID IN (
+    SELECT LOCATION_ID 
+    FROM HR.LOCATIONS 
+    WHERE COUNTRY_ID = 'UK'
+);
+
+-- Task 4
+SELECT 
+    e.FIRST_NAME, 
+    e.LAST_NAME, 
+    e.SALARY
+FROM HR.EMPLOYEES e
+JOIN HR.EMPLOYEES m 
+    ON e.MANAGER_ID = m.EMPLOYEE_ID
+WHERE m.FIRST_NAME = 'Neena' 
+  AND m.LAST_NAME = 'Kochhar';
+
+-- Task 5
+SELECT 
+    e.FIRST_NAME, 
+    e.LAST_NAME, 
+    e.HIRE_DATE AS ISCI_TARIX, 
+    m.FIRST_NAME AS MENECER_ADI, 
+    m.HIRE_DATE AS MENECER_TARIX
+FROM HR.EMPLOYEES e
+JOIN HR.EMPLOYEES m 
+    ON e.MANAGER_ID = m.EMPLOYEE_ID
+WHERE e.HIRE_DATE < m.HIRE_DATE;
+
+-- Task 6
+SELECT 
+    e.FIRST_NAME, 
+    e.LAST_NAME, 
+    e.JOB_ID, 
+    m.FIRST_NAME AS MENECER_ADI, 
+    m.LAST_NAME AS MENECER_SOYADI
+FROM HR.EMPLOYEES e
+JOIN HR.EMPLOYEES m 
+    ON e.MANAGER_ID = m.EMPLOYEE_ID
+WHERE e.JOB_ID = m.JOB_ID;
+
+-- Task 7
+SELECT 
+    FIRST_NAME, 
+    LAST_NAME, 
+    JOB_ID, 
+    SALARY
+FROM HR.EMPLOYEES
+WHERE JOB_ID IN (
+    SELECT JOB_ID 
+    FROM HR.JOBS 
+    WHERE MAX_SALARY > 15000
+);
+
+-- Task 8
+/*
+Tapılan 3 səhv:
+1. Subquery çoxsətirli (multi-row) nəticə qaytardığı halda '=' operatoru işlədilib ('IN' olmalıdır).
+2. Subquery SELECT hissəsində 2 sütun (DEPARTMENT_ID, LOCATION_ID) seçilib, lakin WHERE şərtində tək sütun (DEPARTMENT_ID) müqayisə olunur.
+3. Oracle-da mətnlər böyük-kiçik hərfə həssasdır (case-sensitive). Cədvəldə şöbənin adı 'IT' kimi yazıldığı halda 'it' yazılıb (bu xəta vermir, sadəcə IT işçilərini nəticədən kənarda qoyur).
+(Əlavə qeyd: Oracle-da subquery daxilində ORDER BY istifadəsi də sintaksis xətası yaradır.)
+*/
+SELECT 
+    FIRST_NAME, 
+    SALARY
+FROM HR.EMPLOYEES
+WHERE DEPARTMENT_ID IN (
+    SELECT DEPARTMENT_ID
+    FROM HR.DEPARTMENTS
+    WHERE DEPARTMENT_NAME IN ('IT', 'Finance')
+);
+
+-- Task 9
+SELECT 
+    EMPLOYEE_ID, 
+    FIRST_NAME, 
+    LAST_NAME
+FROM HR.EMPLOYEES
+WHERE EMPLOYEE_ID NOT IN (
+    SELECT MANAGER_ID 
+    FROM HR.EMPLOYEES 
+    WHERE MANAGER_ID IS NOT NULL
+);
+
+-- Task 10
+SELECT 
+    m.FIRST_NAME AS MENECER_ADI, 
+    m.LAST_NAME AS MENECER_SOYADI, 
+    MAX(e.SALARY) AS MAX_TABE_MAASI, 
+    MIN(e.SALARY) AS MIN_TABE_MAASI
+FROM HR.EMPLOYEES e
+JOIN HR.EMPLOYEES m 
+    ON e.MANAGER_ID = m.EMPLOYEE_ID
+GROUP BY m.EMPLOYEE_ID, m.FIRST_NAME, m.LAST_NAME
+HAVING AVG(e.SALARY) > 7000
+ORDER BY MAX_TABE_MAASI DESC;
+
